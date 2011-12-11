@@ -91,19 +91,19 @@ get '/events' => sub {
 		my $result = updatefile($channel, $message);
 		$self->write("event:msg\ndata: $message\n\n");
 	});
-	$irc->reg_cb(join => sub {
+	my $g = $irc->reg_cb(join => sub {
 		my ($ls, $nick, $channel, $is_myself) = @_;
 		my $message = "$nick joined the chat room.\n";
 		my $result = updatefile($channel, $message);
 		$self->write("event:msg\ndata: $message\n\n");
 	});
-	$irc->reg_cb(nick_change => sub {
+	my $g = $irc->reg_cb(nick_change => sub {
 		my ($ls, $ld_nick, $new_nick, $is_myself)  = @_;
 		my $message = "$ld_nick changed his/her nickname to $new_nick.\n";
 		my $result = updatefile($channel, $message);
 		$self->write("event:msg\ndata: $message\n\n");
 	});
-	$irc->reg_cb(quit => sub {
+	my $g = $irc->reg_cb(quit => sub {
 		my ($sl, $nick, $msg)  = @_;
 		my $message = "$nick left the chat room.\n";
 		my $result = updatefile($channel, $message);
