@@ -19,7 +19,7 @@ print FH '{
   };';
 close FH; 
 }
-my $plugin = plugin Config => {file => 'config.conf', stash_key => 'conf'};
+my $config = plugin Config => {file => 'config.conf', stash_key => 'conf'};
 my $channel = "#maxson";
 my $nick = "guest$$";
 my $user = "guest$$";
@@ -39,10 +39,10 @@ sub configr{
 #my $config => {stash_key => 'conf'};
 get '/' => sub {
 	my $self = shift;
-	$self->config('nick') = $self->param('nick') || "guest$$";
-	$self->config('user') = $self->param('user') || "guest$$";
-	$self->config('real') = $self->param('real') || "guest$$";
-	$self->config('channel') = $self->param('channel') || '#maxson';
+	$config->{'nick'} = $self->param('nick') || "guest$$";
+	$config->{'user'} = $self->param('user') || "guest$$";
+	$config->{'real'} = $self->param('real') || "guest$$";
+	$config->{'channel'} = $self->param('channel') || '#maxson';
 	$self->stash(nick => $self->config('nick'));
 	$self->stash(user => $self->config('user'));
 	$self->stash(real => $self->config('real'));
@@ -144,7 +144,7 @@ border:5px solid gray;
     </script>
   </head>
   <body>
-	<div id="content">Below is the current content of the chanel <%= $channel %></div>  
+	<div id="content">Below is the current content of the channel <%= $channel %></div>  
 	<p>You can change the any of the value's bellow.</p>
 	<form action="" type="POST">
 		Nick: <input type="text" name="nick" value="<%= $nick %>" /><br />
