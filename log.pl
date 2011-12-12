@@ -19,12 +19,19 @@ get '/' => sub {
 	$self->stash(nick => $nick);
 	$self->render('index', channel =>$channel);
 	$irc->send_srv(NICK => $nick);
-	$irc->send_srv(JOIN => $channel);
-	$irc->send_srv(PART => $test);
-	
+	$self->channelr($channel);
 };
 $irc->connect($server, 6667, {nick => $nick, user => $user, real => $real});
 
+sub channelr {
+	my ($channel)  = @_;
+	if ($channel ne $test) {
+		$irc->send_srv(JOIN => $channel);
+		$irc->send_srv(PART => $test);
+	}else{
+		$irc->send_srv(JOIN => $channel);
+	}
+}
 sub updatefile {
 	my ($channel, $message)  = @_;
 	my $dt = DateTime->now;
