@@ -49,12 +49,27 @@ get '/' => sub {
 	$self->stash(nick => $self->config('nick'));
 	$self->stash(user => $self->config('user'));
 	$self->stash(real => $self->config('real'));
+	$self->stash(server => $self->config('server'));
 	$self->render('index', channel =>$self->config('channel'));
 	$irc->send_srv(JOIN => $self->config('channel'));
 	$irc->send_srv(PART => $test);
 	$irc->send_srv(NICK => $self->param('nick'));
+	changeserver($self, 'irc.freenode.net', $self->param('server'));
+	
 };
-$irc->connect('irc.freenode.net', 6667, {nick => $nick, user => $user, real => $real});
+sub changeserver {
+	my ($self, $server1, $server2)  = @_;
+	if ($server1 ne $server2) {
+		$irc->disconnect ('done');	
+		$irc->connect($server2, 6667, {nick => $nick, user => $user, real => $real});
+		waitr($self);
+	}
+}
+sub waitr {
+	my $self = shift;
+	Mojo::IOLoop->stream($self->tx->connection)->timeout(30000000000000000000000);
+}
+$irc->connect($server, 6667, {nick => $nick, user => $user, real => $real});
 
 
 sub channeld {
@@ -160,6 +175,7 @@ border:5px solid gray;
 		User: <input type="text" name="user" value="<%= $user %>" /><br />
 		Real Name: <input type="text" name="real" value="<%= $real %>" /><br />
 		Channel: <input type="text" name="channel" value="<%= $channel %>" /><br />
+		Server: <input type="text" name="server" value="<%= $server %>" /><br />
 	<input type="submit" value="Submit" />
 	</form>
    <div id="currentcontent"></div>
