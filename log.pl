@@ -14,12 +14,12 @@ my $test = $channel;
 my $server = 'irc.perl.org';
 get '/' => sub {
 	my $self = shift;
-	$nick = $self->param('nick') || "guest$$";
-	$channel = $self->param('channel') || '#mojo';
+	$nick = $self->param('nick') || $nick;
+	$channel = $self->param('channel') || $channel;
 	$self->stash(nick => $nick);
 	$self->render('index', channel =>$channel);
 	$irc->send_srv(NICK => $nick);
-	$self->channelr($channel);
+	channelr($channel);
 };
 $irc->connect($server, 6667, {nick => $nick, user => $user, real => $real});
 
