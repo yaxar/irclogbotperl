@@ -19,7 +19,7 @@ get '/' => sub {
 	$self->stash(nick => $nick);
 	$self->render('index', channel =>$channel);
 	$irc->send_srv(NICK => $nick);
-	$self->channelr($channel);
+	channelr($channel);
 };
 $irc->connect($server, 6667, {nick => $nick, user => $user, real => $real});
 
