@@ -6,10 +6,15 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-  NAME         => 'MyApp',
-  VERSION_FROM => 'lib/MyApp.pm',
-  AUTHOR       => 'A Good Programmer <nospam@cpan.org>',
-  EXE_FILES    => ['script/my_app'],
-  PREREQ_PM    => {'Mojolicious' => '2.0'},
+  NAME         => 'A logging script',
+  VERSION => '2.45',
+  AUTHOR       => 'Yaxar <yarxar dot murat at gmail dot com>',
+  EXE_FILES    => ['log.pl'],
+PREREQ_PM    => {'Mojolicious' => '2.0',
+    'Mojolicious::Lite' => 0,
+    'EV' => 0,
+    'AnyEvent::IRC' => 0,
+    'AnyEvent::IRC::Client' => 0,
+    'DateTime' =>0,},
   test         => {TESTS => 't/*.t'}
 );
