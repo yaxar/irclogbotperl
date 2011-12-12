@@ -80,10 +80,10 @@ get '/events' => sub {
 		$self->write("event:msg\ndata: $message\n\n");
 	});
 	$self->on(finish => sub { 
-				undef $pm;
-				undef $j;
-				undef $nc;
-				undef $qu;
+		$irc−>unreg_cb($pm);
+		$irc−>unreg_cb($j);
+		$irc−>unreg_cb($nc);
+		$irc−>unreg_cb($qu);
 	});
 };
 
