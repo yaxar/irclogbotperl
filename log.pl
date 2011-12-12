@@ -8,6 +8,8 @@ use DateTime;
 my $irc = AnyEvent::IRC::Client->new;
 my $channel = "#mojo";
 my $nick = "guest$$";
+my $user = "guest$$";
+my $real = "guest$$";
 my $test = $channel;
 my $server = 'irc.perl.org';
 get '/' => sub {
