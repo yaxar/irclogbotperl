@@ -5,6 +5,7 @@ use EV;
 use AnyEvent::IRC;
 use AnyEvent::IRC::Client;
 use DateTime;
+use utf8;
 #Below we will create a new AnyEvent::IRC instance
 my $irc = AnyEvent::IRC::Client->new;
 #Here we mark the default values
@@ -97,11 +98,11 @@ get '/events' => sub {
 		$self->write("event:msg\ndata: $message\n\n");
 	});
 	# Here we finish it all of and unreg everything
-	$self->on(finish => sub { 
-		$irc−>unreg_cb($pm);
-		$irc−>unreg_cb($j);
-		$irc−>unreg_cb($nc);
-		$irc−>unreg_cb($qu);
+	$self->on(finish => sub {
+		$irc->unreg_cb($pm);
+		$irc->unreg_cb($j);
+		$irc->unreg_cb($nc);
+		$irc->unreg_cb($qu);
 	});
 };
 
