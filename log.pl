@@ -6,16 +6,14 @@ use AnyEvent::IRC::Client;
 use DateTime;
 # Join #mojo on irc.perl.org
 my $irc = AnyEvent::IRC::Client->new;
-my $channel = "#maxson";
+my $channel = "#mojo";
 my $nick = "guest$$";
-my $user = "guest$$";
-my $real = "guest$$";
 my $test = $channel;
 my $server = 'irc.perl.org';
 get '/' => sub {
 	my $self = shift;
 	$nick = $self->param('nick') || "guest$$";
-	$channel = $self->param('channel') || '#maxson';
+	$channel = $self->param('channel') || '#mojo';
 	$self->stash(nick => $nick);
 	$self->render('index', channel =>$channel);
 	$irc->send_srv(NICK => $nick);
