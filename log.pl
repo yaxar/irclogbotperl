@@ -59,7 +59,9 @@ sub updatefile {
 #this is where all the logic comes in :)
 get '/events' => sub {
 	my $self = shift;
+	#setting the timeout high :)
 	Mojo::IOLoop->stream($self->tx->connection)->timeout(300000000);
+	#keep sending a ping so the browser dosn't time out :)
 	$self->write("event:r\ndata:     mmmm\n\n");
 	# Emit "msg" event for every new IRC message
 	$self->res->headers->content_type('text/event-stream');
