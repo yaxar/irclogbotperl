@@ -4,87 +4,31 @@ use EV;
 use AnyEvent::IRC;
 use AnyEvent::IRC::Client;
 use DateTime;
-use Config::Tiny;
 # Join #mojo on irc.perl.org
-my $irc = AnyEvent::IRC::Client->new; 
-my $configfile = 'config.conf';
-unless(-e $configfile){
-open FH, ">$configfile";
-print FH '{
-    nick	=> "guest$$",
-    user	=> "guest$$",
-    real	=> "guest$$",
-    server	=> "irc.freenode.net",
-    channel => "#maxson"
-  };';
-close FH; 
-}
-my $config = plugin Config => {file => 'config.conf', stash_key => 'conf'};
+my $irc = AnyEvent::IRC::Client->new;
 my $channel = "#maxson";
 my $nick = "guest$$";
 my $user = "guest$$";
 my $real = "guest$$";
-my $server = 'irc.freenode.net';
 my $test = $channel;
-sub configr{
-	my $self = shift;
-	$nick = $self->config('nick');
-	$user = $self->config('user');
-	$real = $self->config('real');
-	$channel = $self->config('channel');
-	$server = $self->config('server');
-}
-
-
-#my $config = plugin 'Config';
-#my $config => {default => {foo => 'bar'}};
-#my $config => {stash_key => 'conf'};
+my $server = 'irc.perl.org';
 get '/' => sub {
 	my $self = shift;
-	$config->{'nick'} = $self->param('nick') || "guest$$";
-	$config->{'user'} = $self->param('user') || "guest$$";
-	$config->{'real'} = $self->param('real') || "guest$$";
-	$config->{'channel'} = $self->param('channel') || '#maxson';
-	$config->{'server'} = $self->param('server') || 'irc.freenode.net';
-	$self->stash(nick => $self->config('nick'));
-	$self->stash(user => $self->config('user'));
-	$self->stash(real => $self->config('real'));
-	$self->stash(server => $self->config('server'));
-	$self->render('index', channel =>$self->config('channel'));
-	$irc->send_srv(JOIN => $self->config('channel'));
+	$nick = $self->param('nick') || "guest$$";
+	$channel = $self->param('channel') || '#maxson';
+	$self->stash(nick => $nick);
+	$self->render('index', channel =>$channel);
+	$irc->send_srv(NICK => $nick);
+	$irc->send_srv(JOIN => $channel);
 	$irc->send_srv(PART => $test);
-	$irc->send_srv(NICK => $self->param('nick'));
-	changeserver($self, 'irc.freenode.net', $self->param('server'));
 	
 };
-sub changeserver {
-	my ($self, $server1, $server2)  = @_;
-	if ($server1 ne $server2) {
-		$irc->disconnect ('done');	
-		$irc->connect($server2, 6667, {nick => $nick, user => $user, real => $real});
-		waitr($self);
-	}
-}
-sub waitr {
-	my $self = shift;
-	Mojo::IOLoop->stream($self->tx->connection)->timeout(30000000000000000000000);
-}
 $irc->connect($server, 6667, {nick => $nick, user => $user, real => $real});
 
-
-sub channeld {
-	my ($channel)  = @_;
-	if (defined($channel)) {
-		$channel = $channel;
-	}else{
-		$channel = '#maxson';
-	}
-	return $channel;
-}
 sub updatefile {
 	my ($channel, $message)  = @_;
 	my $dt = DateTime->now;
-my $ymd    = $dt->ymd; 
+	my $ymd    = $dt->ymd; 
 	my $dir = $channel;
 	unless(-d $dir){
 		mkdir $dir or die;
@@ -142,7 +86,7 @@ __DATA__
 @@ index.html.ep
 <!doctype html><html>
   <head>
-  <title>The Mojolicious IRC channel</title>
+  <title>The Perl IRC Server</title>
   <style type="text/css">
 #currentcontent
 {
@@ -169,14 +113,11 @@ border:5px solid gray;
   </head>
   <body>
 	<div id="content">Below is the current content of the channel <%= $channel %></div>  
-	<p>You can change the any of the value's bellow.</p>
+	<p>You can change the Nick or the Channel below but the Server, Real-Name and User you can't change :)</p>
 	<form action="" type="POST">
 		Nick: <input type="text" name="nick" value="<%= $nick %>" /><br />
-		User: <input type="text" name="user" value="<%= $user %>" /><br />
-		Real Name: <input type="text" name="real" value="<%= $real %>" /><br />
 		Channel: <input type="text" name="channel" value="<%= $channel %>" /><br />
-		Server: <input type="text" name="server" value="<%= $server %>" /><br />
-	<input type="submit" value="Submit" />
+		<input type="submit" value="Submit" />
 	</form>
    <div id="currentcontent"></div>
   </body>
