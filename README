@@ -1,0 +1,20 @@
+This is a example using:
+Mojolicious::Lite
+EV
+AnyEvent::IRC
+AnyEvent::IRC::Client
+DateTime
+
+It is a irc logging bot that connects to irc.perl.org and log's the channel mojo
+you can change the configuration manually or with the web browser.
+
+to install first install the dependieces which are listed above.
+Then type :
+morbo log.pl
+
+in the terminal.
+
+and in your web browser go to 127.0.0.1:3000
+
+
+I hope you enjoy :)
